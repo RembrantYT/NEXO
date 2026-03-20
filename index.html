@@ -9,13 +9,29 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
         :root { --nexo-green: #7ed957; --nexo-dark: #0b3c5d; }
-        body { font-family: 'Plus Jakarta Sans', sans-serif; scroll-behavior: smooth; transition: background 0.5s ease, color 0.5s ease; }
-        .glass { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.1); }
-        .nexo-gradient { background: linear-gradient(135deg, #0b3c5d 0%, #1d70a2 50%, #7ed957 100%); }
         
+        /* Animación Global */
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            scroll-behavior: smooth; 
+            transition: background 0.8s cubic-bezier(0.4, 0, 0.2, 1), color 0.5s ease; 
+        }
+
+        .glass { transition: all 0.5s ease; background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.1); }
+        
+        /* Modo Oscuro (Por defecto) - Ahora más profundo */
+        .nexo-gradient { 
+            background: linear-gradient(135deg, #050505 0%, #0b3c5d 50%, #020c12 100%); 
+            background-attachment: fixed;
+        }
+        
+        /* Modo Claro - Colores Originales Verde/Azul */
         body.light-mode { background: #f0f4f8; color: #0b3c5d; }
-        body.light-mode .nexo-gradient { background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%); }
+        body.light-mode .nexo-gradient { 
+            background: linear-gradient(135deg, #0b3c5d 0%, #1d70a2 50%, #7ed957 100%); 
+        }
         body.light-mode .glass { background: rgba(0, 0, 0, 0.05); border: 1px solid rgba(0,0,0,0.1); color: #0b3c5d; }
+        body.light-mode .text-white { color: #0b3c5d !important; }
 
         .text-gold {
             background: linear-gradient(to right, #BF953F, #FCF6BA, #B38728, #FBF5B7, #AA771C);
@@ -46,7 +62,7 @@
             <li><a href="#mision" class="hover:text-[#7ed957] transition">Misión</a></li>
             <li><a href="#historia" class="hover:text-[#7ed957] transition">Historia</a></li>
             <li><a href="#catalogo" class="hover:text-[#7ed957] transition">Catálogo</a></li>
-            <li><button onclick="toggleTheme()" id="theme-btn" class="text-xl hover:scale-125 transition">🌙</button></li>
+            <li><button onclick="toggleTheme()" id="theme-btn" class="text-xl hover:scale-125 transition">☀️</button></li>
             <li><button onclick="toggleCart()" class="relative bg-[#7ed957] text-black px-4 py-2 rounded-full hover:scale-105 transition font-black">
                 🛒 (<span id="cart-count">0</span>)
             </button></li>
@@ -141,10 +157,10 @@
     <section class="py-20 px-8">
         <div class="max-w-5xl mx-auto glass p-16 rounded-[60px] border-white/5 text-center shadow-2xl">
             <h2 class="text-4xl font-black italic mb-8 uppercase tracking-tighter text-white">NUESTRO <span class="text-[#7ed957]">RECONOCIMIENTO</span></h2>
-            <p class="text-2xl md:text-3xl font-light italic opacity-95 leading-relaxed">
+            <div class="text-2xl md:text-3xl font-light italic opacity-95 leading-relaxed">
                 "NEXO extiende un profundo agradecimiento a la <span class="text-lucero-gradient text-3xl md:text-4xl font-black uppercase">Escuela Técnica Lucero</span> por su apoyo en la formación técnica e innovación. <br><br>
                 Gracias a la <span class="text-white font-bold">Directora Lucero Carcamo Ramírez</span> y al <span class="text-white font-bold">Ingeniero Juan Flores</span> por sus consejos."
-            </p>
+            </div>
         </div>
     </section>
 
@@ -217,7 +233,19 @@
     <script>
         let cart = []; let currentQty = 1; const UNIT_PRICE = 250;
         function handleCredentialResponse(r) { alert("¡Bienvenido Ricardo! Sesión iniciada."); }
-        function toggleTheme() { document.body.classList.toggle('light-mode'); }
+        
+        function toggleTheme() { 
+            const body = document.body;
+            const btn = document.getElementById('theme-btn');
+            body.classList.toggle('light-mode'); 
+            
+            if(body.classList.contains('light-mode')) {
+                btn.innerText = "🌙";
+            } else {
+                btn.innerText = "☀️";
+            }
+        }
+
         function updateQty(val) { currentQty = Math.max(1, currentQty + val); document.getElementById('prod-qty').innerText = currentQty; document.getElementById('display-price').innerText = currentQty * UNIT_PRICE; }
         function toggleCart() { document.getElementById('cart-sidebar').classList.toggle('translate-x-full'); }
         function addToCart(name, price) { cart.push({name, price, qty: currentQty}); updateCartUI(); toggleCart(); }
