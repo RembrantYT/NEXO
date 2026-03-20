@@ -3,68 +3,77 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SEXO | Plataforma Oficial</title>
+<title>NEXO | MAX</title>
 
 <style>
-body {
-  margin: 0;
-  font-family: 'Segoe UI', sans-serif;
-  background: linear-gradient(135deg, #0b3c5d, #7ed957);
-  color: white;
+body{
+  margin:0;
+  font-family:sans-serif;
+  background:linear-gradient(135deg,#0b3c5d,#7ed957);
+  color:white;
 }
 
-nav {
-  display: flex;
-  justify-content: space-between;
-  padding: 15px 40px;
-  background: rgba(0,0,0,0.4);
+/* NAV */
+nav{
+  display:flex;
+  justify-content:space-between;
+  padding:20px;
+  backdrop-filter:blur(10px);
 }
 
-nav ul {
-  display: flex;
-  gap: 20px;
-  list-style: none;
+/* HERO */
+.hero{
+  text-align:center;
+  padding:100px 20px;
 }
 
-nav a, nav button {
-  color: white;
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-weight: bold;
+/* BOTONES */
+.btn{
+  background:#7ed957;
+  border:none;
+  padding:10px 20px;
+  border-radius:20px;
+  cursor:pointer;
 }
 
-.section {
-  padding: 60px 20px;
-  text-align: center;
+/* PRODUCTO */
+.product{
+  text-align:center;
+  padding:40px;
 }
 
-.hero {
-  padding: 100px 20px;
+.product img{
+  width:200px;
+  border-radius:15px;
 }
 
-.btn {
-  background: #7ed957;
-  color: black;
-  padding: 12px 25px;
-  border-radius: 25px;
-  border: none;
-  cursor: pointer;
-  font-weight: bold;
-  margin-top: 10px;
+/* MODAL */
+.modal{
+  position:fixed;
+  top:0;left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,.7);
+  display:none;
+  justify-content:center;
+  align-items:center;
 }
 
-.product-img {
-  width: 220px;
-  border-radius: 15px;
-  margin: 20px;
+.modal-box{
+  background:white;
+  color:black;
+  padding:20px;
+  border-radius:10px;
+  width:300px;
 }
 
-.cart {
-  background: rgba(0,0,0,0.3);
-  padding: 20px;
-  border-radius: 10px;
-  margin-top: 20px;
+/* ADMIN */
+.admin{
+  display:none;
+  background:rgba(0,0,0,.3);
+  padding:20px;
+  margin:20px;
+  border-radius:10px;
 }
 </style>
 </head>
@@ -72,108 +81,139 @@ nav a, nav button {
 <body>
 
 <nav>
-  <h2>NEXO</h2>
-  <ul>
-    <li><a href="#inicio">Inicio</a></li>
-    <li><a href="#producto">Producto</a></li>
-    <li><a href="#contacto">Contacto</a></li>
-    <li><button onclick="loginGoogle()">Login</button></li>
-  </ul>
+<h2>NEXO</h2>
+<button class="btn" onclick="login()">Login</button>
 </nav>
 
-<section id="inicio" class="hero section">
-  <h1>NEXO</h1>
-  <p>Tu espacio de calma, siempre contigo</p>
-  <button class="btn" onclick="loginGoogle()">Iniciar con Google</button>
-  <p id="user"></p>
+<section class="hero">
+<h1>NEXO</h1>
+<p id="user">No conectado</p>
 </section>
 
-<section id="producto" class="section">
-  <h2>Producto</h2>
+<section class="product">
+<h2>Producto</h2>
+<img src="https://i.postimg.cc/0Q0zZxYw/nexo.jpg">
 
-  <img src="https://i.postimg.cc/0Q0zZxYw/nexo.jpg" class="product-img">
+<p>Stock: <span id="stock">...</span></p>
 
-  <p>Dispositivo portátil para reducir el estrés mediante pulsos relajantes.</p>
+<select id="cantidad">
+<option value="1">1</option>
+<option value="2">2</option>
+</select>
 
-  <h3>Compra</h3>
+<button class="btn" onclick="abrirPago()">Comprar</button>
 
-  <select id="cantidad" onchange="updateTotal()">
-    <option value="1">1</option>
-    <option value="2">2</option>
-  </select>
-
-  <p>Total: $<span id="total">250</span> MXN</p>
-
-  <button class="btn" onclick="comprar()">Comprar</button>
-
-  <div class="cart">
-    <p>Usuario: <span id="userCart">No conectado</span></p>
-  </div>
-
-  <p>📦 Bajo pedido | 🚚 Entrega 5-6 días</p>
+<p>Carrito: <span id="cart">0</span></p>
 </section>
 
-<section id="contacto" class="section">
-  <h2>Contacto</h2>
-  <p>📞 231-151-48135</p>
+<!-- MODAL PAGO -->
+<div class="modal" id="modal">
+<div class="modal-box">
+<h3>Pago</h3>
+<input placeholder="Nombre tarjeta"><br><br>
+<input placeholder="** ** ** 4242"><br><br>
+<button class="btn" onclick="confirmarCompra()">Pagar</button>
+</div>
+</div>
+
+<section class="admin" id="admin">
+<h2>Pedidos</h2>
+<div id="pedidos"></div>
 </section>
 
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, getDocs, updateDoc as upd } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-// 🔥 TU CONFIG YA PUESTA
 const firebaseConfig = {
-  apiKey: "AIzaSyBcZD6ayN9cdYOgc6bpTLpj_dhN0oc5OjI",
+  apiKey: "AIzaSyBcZD6...",
   authDomain: "nexo-1d9c2.firebaseapp.com",
-  projectId: "nexo-1d9c2",
-  storageBucket: "nexo-1d9c2.firebasestorage.app",
-  messagingSenderId: "524854384171",
-  appId: "1:524854384171:web:7581111dc7c080ad4c7c6e",
-  measurementId: "G-5W1FT1QWEL"
+  projectId: "nexo-1d9c2"
 };
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const db = getFirestore(app);
 const provider = new GoogleAuthProvider();
 
-let usuario = null;
-let precio = 250;
+let user=null;
+let cart=0;
 
-// LOGIN REAL
-window.loginGoogle = async function() {
-  try {
-    const result = await signInWithPopup(auth, provider);
-    usuario = result.user;
+// LOGIN
+window.login = async ()=>{
+  let res = await signInWithPopup(auth,provider);
+  user = res.user;
+  document.getElementById("user").innerText = user.email;
 
-    document.getElementById("user").innerText = "Sesión: " + usuario.email;
-    document.getElementById("userCart").innerText = usuario.email;
-
-  } catch (error) {
-    alert("Error al iniciar sesión");
-    console.error(error);
-  }
+  document.getElementById("admin").style.display="block";
+  loadPedidos();
 }
 
-// TOTAL
-window.updateTotal = function() {
-  let cant = document.getElementById("cantidad").value;
-  document.getElementById("total").innerText = cant * precio;
+// STOCK
+async function stock(){
+  let ref = doc(db,"data","stock");
+  let snap = await getDoc(ref);
+
+  if(!snap.exists()){
+    await setDoc(ref,{cantidad:4});
+    document.getElementById("stock").innerText=4;
+  }else{
+    document.getElementById("stock").innerText=snap.data().cantidad;
+  }
+}
+stock();
+
+// MODAL
+window.abrirPago=()=>{
+  document.getElementById("modal").style.display="flex";
 }
 
-// COMPRA
-window.comprar = function() {
-  if (!usuario) {
-    alert("Debes iniciar sesión");
-    return;
-  }
+// CONFIRMAR
+window.confirmarCompra = async ()=>{
+  let cant = parseInt(document.getElementById("cantidad").value);
 
-  let cant = document.getElementById("cantidad").value;
-  let total = cant * precio;
+  let ref = doc(db,"data","stock");
+  let snap = await getDoc(ref);
+  let s = snap.data().cantidad;
 
-  let mensaje = Hola, soy ${usuario.email} y quiero ${cant} NEXO(s) por $${total};
-  window.open(https://wa.me/5223115148135?text=${encodeURIComponent(mensaje)});
+  if(cant > s) return alert("Sin stock");
+
+  await updateDoc(ref,{cantidad:s-cant});
+
+  await setDoc(doc(db,"pedidos",Date.now().toString()),{
+    user:user.email,
+    cantidad:cant,
+    estado:"pendiente"
+  });
+
+  cart+=cant;
+  document.getElementById("cart").innerText=cart;
+
+  document.getElementById("modal").style.display="none";
+  alert("Pago simulado exitoso");
+}
+
+// ADMIN
+async function loadPedidos(){
+  let q = await getDocs(collection(db,"pedidos"));
+  let html="";
+
+  q.forEach(d=>{
+    let data = d.data();
+    html+=`
+    <p>${data.user} - ${data.cantidad} 
+    <button onclick="cambiar('${d.id}')">✔</button></p>`;
+  });
+
+  document.getElementById("pedidos").innerHTML=html;
+}
+
+window.cambiar = async (id)=>{
+  let ref = doc(db,"pedidos",id);
+  await upd(ref,{estado:"enviado"});
+  loadPedidos();
 }
 
 </script>
