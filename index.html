@@ -260,15 +260,41 @@
         }
 
         function toggleAIChat() { document.getElementById('ai-chat').classList.toggle('scale-0'); }
+        
         function sendAIMessage() {
-            const input = document.getElementById('ai-input'); const content = document.getElementById('chat-content');
-            const msg = input.value.toLowerCase().trim(); if(!msg) return;
+            const input = document.getElementById('ai-input'); 
+            const content = document.getElementById('chat-content');
+            const msg = input.value.toLowerCase().trim(); 
+            
+            if(!msg) return;
+            
             content.innerHTML += `<div class="bg-[#7ed957] text-black p-3 rounded-2xl ml-8 font-bold text-right">${input.value}</div>`;
             input.value = "";
+            
             setTimeout(() => {
-                let r = "¡NEXO fue creado por Ricardo Bryan Peralta Marcelo!";
-                if(msg.includes("sexo")) r = "Paz ante todo con NEXO 😉";
-                else if(msg.includes("precio")) r = "El Dispositivo NEXO cuesta $250.00 MXN.";
+                let r = "Lo siento, no entiendo eso. ¿Quieres saber algo sobre NEXO?";
+                
+                // Lógica de comandos mejorada
+                if (msg.includes("hola") || msg.includes("buenos dias") || msg.includes("que tal")) {
+                    r = "¡Hola! Bienvendo al soporte de NEXO. ¿En qué puedo ayudarte hoy?";
+                }
+                
+                if (msg.includes("nexo")) {
+                    if (msg.includes("creo") || msg.includes("creador") || msg.includes("dueño")) {
+                        r = "¡NEXO fue creado por Ricardo Bryan Peralta Marcelo con el apoyo de la Escuela Técnica Lucero!";
+                    } else if (msg.includes("precio") || msg.includes("cuanto cuesta") || msg.includes("costo")) {
+                        r = "El Dispositivo NEXO básico cuesta $250.00 MXN. También tenemos planes Avanzado ($450) y Premium ($700).";
+                    } else if (msg.includes("que es") || msg.includes("sirve")) {
+                        r = "NEXO es un dispositivo tecnológico diseñado para brindar relajación y bienestar personal en cualquier momento.";
+                    } else {
+                        r = "NEXO es innovación y paz. ¿Te gustaría conocer nuestros precios o quién nos fundó?";
+                    }
+                } else if (msg.includes("sexo")) {
+                    r = "Nuestra prioridad es tu paz mental. 😉";
+                } else if (msg.includes("gracias")) {
+                    r = "¡De nada! En NEXO estamos para servirte.";
+                }
+
                 content.innerHTML += `<div class="bg-white/10 p-3 rounded-2xl mr-8 italic border border-white/5">🤖 ${r}</div>`;
                 content.scrollTop = content.scrollHeight;
             }, 600);
