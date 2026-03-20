@@ -12,16 +12,20 @@
         .glass { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.1); }
         .nexo-gradient { background: linear-gradient(135deg, #0b3c5d 0%, #1d70a2 50%, #7ed957 100%); }
         
-        /* Light Mode Styles */
         body.light-mode { background: #f0f4f8; color: #0b3c5d; }
         body.light-mode .nexo-gradient { background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%); }
         body.light-mode .glass { background: rgba(0, 0, 0, 0.05); border: 1px solid rgba(0,0,0,0.1); color: #0b3c5d; }
-        body.light-mode section#catalogo { background: rgba(0,0,0,0.02); }
-        body.light-mode .text-gray-300 { color: #4a5568; }
+
+        /* Estilo degradado para la escuela */
+        .text-lucero-gradient {
+            background: linear-gradient(to right, #ff0000, #888888);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+        }
 
         .product-card:hover { transform: translateY(-10px); transition: all 0.3s ease; }
-        #cart-sidebar, #loginModal, #ai-chat { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
-        .scroll-mt { scroll-margin-top: 100px; }
+        #cart-sidebar, #loginModal { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
         ::-webkit-scrollbar { width: 5px; }
         ::-webkit-scrollbar-thumb { background: var(--nexo-green); border-radius: 10px; }
     </style>
@@ -33,7 +37,7 @@
         <ul class="hidden md:flex gap-8 font-bold text-sm uppercase tracking-widest items-center">
             <li><a href="#inicio" class="hover:text-[#7ed957] transition">Inicio</a></li>
             <li><a href="#catalogo" class="hover:text-[#7ed957] transition">Catálogo</a></li>
-            <li><button onclick="toggleTheme()" id="theme-btn" class="text-xl hover:scale-125 transition rotate-0">🌙</button></li>
+            <li><button onclick="toggleTheme()" id="theme-btn" class="text-xl hover:scale-125 transition">🌙</button></li>
             <li><button onclick="toggleCart()" class="relative bg-[#7ed957] text-black px-4 py-2 rounded-full hover:scale-105 transition font-black">
                 🛒 (<span id="cart-count">0</span>)
             </button></li>
@@ -83,10 +87,34 @@
         <div class="max-w-4xl mx-auto glass p-12 rounded-[50px] border-white/5 text-center">
             <h2 class="text-3xl font-black italic mb-6">NUESTRO <span class="text-[#7ed957]">RECONOCIMIENTO</span></h2>
             <p class="text-xl font-light italic opacity-90 leading-relaxed">
-                "NEXO extiende un profundo agradecimiento a la <span class="text-[#7ed957] font-bold text-2xl uppercase">Escuela Técnica Lucero</span> por su invaluable apoyo en la formación técnica e innovación, ."Muchas gracias a la Directora Lucero Carcamo Ramírez y al Ingeniero Juan Flores por todos sus consejos
+                "NEXO extiende un profundo agradecimiento a la <span class="text-lucero-gradient text-2xl uppercase">Escuela Técnica Lucero</span> por su invaluable apoyo en la formación técnica e innovación. Muchas gracias a la Directora Lucero Carcamo Ramírez y al Ingeniero Juan Flores por todos sus consejos."
             </p>
         </div>
     </section>
+
+    <section id="contacto" class="py-20 px-8">
+        <div class="max-w-4xl mx-auto glass p-10 rounded-[40px] text-center space-y-6 border-white/5">
+            <h3 class="text-3xl font-black uppercase tracking-tighter">Contáctanos</h3>
+            <div class="flex flex-col md:flex-row justify-center items-center gap-8">
+                <div>
+                    <p class="text-[10px] font-black opacity-50 uppercase tracking-widest">Llámanos o WhatsApp</p>
+                    <p class="text-2xl font-bold">231 151 1435</p>
+                </div>
+                <div class="h-[1px] w-12 bg-white/20 hidden md:block"></div>
+                <div>
+                    <p class="text-[10px] font-black opacity-50 uppercase tracking-widest">Instagram</p>
+                    <p class="text-2xl font-bold text-[#7ed957]">@nexo_oficial1</p>
+                </div>
+            </div>
+            <a href="https://wa.me/522311511435?text=Quiero%20más%20información%20del%20dispositivo%20NEXO" target="_blank" class="inline-flex items-center gap-3 bg-white text-black px-8 py-4 rounded-full font-black hover:bg-[#7ed957] transition-all transform hover:scale-110">
+                💬 CHAT DE EMPRESA
+            </a>
+        </div>
+    </section>
+
+    <footer class="py-20 px-8 text-center opacity-60">
+        <p class="font-bold uppercase tracking-widest text-xs">© 2026 NEXO | Teziutlán, Puebla</p>
+    </footer>
 
     <div id="cart-sidebar" class="fixed top-0 right-0 h-full w-full md:w-[400px] bg-white text-black z-[100] transform translate-x-full shadow-2xl flex flex-col">
         <div class="p-8 border-b flex justify-between items-center bg-gray-50">
@@ -105,40 +133,21 @@
         </div>
     </div>
 
-    <div id="loginModal" class="fixed inset-0 z-[200] hidden bg-black/95 backdrop-blur-md flex items-center justify-center p-6">
-        <div class="bg-white text-black w-full max-w-md rounded-[40px] p-12 relative">
-            <button onclick="closeLogin()" class="absolute top-8 right-8 text-xl font-black opacity-30">✕</button>
-            <h2 class="text-4xl font-black italic mb-8 uppercase tracking-tighter text-[#0b3c5d]">Ingresar</h2>
-            <input type="email" placeholder="EMAIL" class="w-full bg-gray-100 p-5 rounded-2xl mb-4 outline-none border-2 border-transparent focus:border-[#7ed957] font-bold uppercase text-xs">
-            <input type="password" placeholder="PASSWORD" class="w-full bg-gray-100 p-5 rounded-2xl mb-6 outline-none border-2 border-transparent focus:border-[#7ed957] font-bold uppercase text-xs">
-            <button class="w-full bg-[#0b3c5d] text-white py-5 rounded-2xl font-black uppercase tracking-widest shadow-xl">Entrar</button>
-        </div>
-    </div>
-
     <script>
         let cart = [];
         let currentQty = 1;
 
-        // --- TEMA CLARO/OSCURO ---
         function toggleTheme() {
             document.body.classList.toggle('light-mode');
             const btn = document.getElementById('theme-btn');
-            if(document.body.classList.contains('light-mode')) {
-                btn.innerText = '☀️';
-                btn.style.transform = 'rotate(180deg)';
-            } else {
-                btn.innerText = '🌙';
-                btn.style.transform = 'rotate(0deg)';
-            }
+            btn.innerText = document.body.classList.contains('light-mode') ? '☀️' : '🌙';
         }
 
-        // --- LÓGICA DE CANTIDAD ---
         function updateQty(val) {
             currentQty = Math.max(1, currentQty + val);
             document.getElementById('prod-qty').innerText = currentQty;
         }
 
-        // --- CARRITO ---
         function toggleCart() { document.getElementById('cart-sidebar').classList.toggle('translate-x-full'); }
 
         function addToCart(name, price) {
@@ -158,7 +167,6 @@
             const list = document.getElementById('cart-items');
             const totalEl = document.getElementById('cart-total');
             const countEl = document.getElementById('cart-count');
-            
             let total = 0;
             let count = 0;
 
@@ -178,7 +186,6 @@
                     </div>`;
                 }).join('');
             }
-
             totalEl.innerText = `$${total.toFixed(2)}`;
             countEl.innerText = count;
         }
@@ -188,8 +195,8 @@
             updateCartUI();
         }
 
-        function openLogin() { document.getElementById("loginModal").classList.remove('hidden'); }
-        function closeLogin() { document.getElementById("loginModal").classList.add('hidden'); }
+        function openLogin() { document.getElementById("loginModal")?.classList.remove('hidden'); }
+        function closeLogin() { document.getElementById("loginModal")?.classList.add('hidden'); }
 
         function updateWidget() {
             const now = new Date();
@@ -199,4 +206,4 @@
         setInterval(updateWidget, 1000); updateWidget();
     </script>
 </body>
-</html> 
+</html>
