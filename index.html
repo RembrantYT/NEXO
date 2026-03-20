@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEXO | Tú espacio de calma, siempre contigo</title>
+    <title>NEXO | Reprograma tu Calma</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;400;600;800&display=swap" rel="stylesheet">
     <script>
@@ -40,7 +40,7 @@
     </nav>
 
     <div class="fixed bottom-6 left-6 z-50 text-[10px] font-black tracking-widest uppercase opacity-40" id="live-clock">
-        00:00:00 | 00/00/00
+        Cargando hora CDMX...
     </div>
 
     <section id="inicio" class="min-h-screen flex flex-col items-center justify-center text-center px-4">
@@ -58,15 +58,15 @@
                 <h2 class="text-6xl font-black italic tracking-tighter leading-none text-nexoGreen">NEXO</h2>
                 <div class="flex justify-between items-end border-b border-white/10 pb-6">
                     <p class="text-5xl font-light" id="unit-price">$250.00 <span class="text-sm opacity-40 uppercase">MXN</span></p>
-                    <p class="text-xs font-black uppercase tracking-widest opacity-60">Stock: <span id="real-stock" class="text-red-500 font-bold">4</span></p>
+                    <p class="text-xs font-black uppercase tracking-widest opacity-60 italic">Edición Limitada</p>
                 </div>
                 
                 <div class="space-y-4">
-                    <label class="text-[10px] font-black uppercase opacity-40 tracking-[0.3em]">Cantidad inicial:</label>
+                    <label class="text-[10px] font-black uppercase opacity-40 tracking-[0.3em]">Seleccionar cantidad:</label>
                     <div class="flex items-center gap-4">
-                        <button onclick="changeMainQty(-1)" class="glass w-12 h-12 rounded-full font-bold text-xl">-</button>
+                        <button onclick="changeMainQty(-1)" class="glass w-12 h-12 rounded-full font-bold text-xl hover:bg-white/10 transition">-</button>
                         <span id="main-qty" class="text-3xl font-black w-10 text-center">1</span>
-                        <button onclick="changeMainQty(1)" class="glass w-12 h-12 rounded-full font-bold text-xl">+</button>
+                        <button onclick="changeMainQty(1)" class="glass w-12 h-12 rounded-full font-bold text-xl hover:bg-white/10 transition">+</button>
                     </div>
                 </div>
 
@@ -76,20 +76,6 @@
                 </div>
 
                 <button onclick="addToCart()" class="w-full bg-white text-black py-6 rounded-3xl font-black text-xl hover:bg-nexoGreen transition shadow-2xl uppercase tracking-tighter active:scale-95">Añadir a la bolsa</button>
-            </div>
-        </div>
-    </section>
-
-    <section id="contacto" class="py-32 px-10 text-center max-w-4xl mx-auto">
-        <h2 class="text-5xl font-black mb-16 tracking-tighter">¿TIENES DUDAS? <br><span class="opacity-30 italic">Hablemos.</span></h2>
-        <div class="grid md:grid-cols-2 gap-8">
-            <a href="https://wa.me/5223115148135" target="_blank" class="glass p-10 rounded-3xl hover:bg-nexoGreen/10 transition group">
-                <h4 class="font-black text-xs uppercase mb-2">WhatsApp Directo</h4>
-                <p class="text-2xl font-light">231 151 1435</p>
-            </a>
-            <div class="glass p-10 rounded-3xl">
-                <h4 class="font-black text-xs uppercase mb-2">Email Soporte</h4>
-                <p class="text-2xl font-light italic opacity-50 text-sm">nexoofficialmx@gmail.com</p>
             </div>
         </div>
     </section>
@@ -120,37 +106,38 @@
         const db = getFirestore(app);
 
         let cartQty = 0;
-        let currentStock = 0;
         let mainQty = 1;
         const UNIT_PRICE = 250;
 
-        // --- RELOJ ---
-        setInterval(() => {
+        // --- RELOJ TIEMPO REAL CDMX ---
+        function updateClock() {
             const now = new Date();
-            document.getElementById('live-clock').innerText = `${now.toLocaleTimeString()} | ${now.toLocaleDateString()}`;
-        }, 1000);
+            const options = { 
+                timeZone: 'America/Mexico_City', 
+                hour: '2-digit', 
+                minute: '2-digit', 
+                second: '2-digit', 
+                hour12: false 
+            };
+            const dateOptions = { 
+                timeZone: 'America/Mexico_City', 
+                day: '2-digit', 
+                month: '2-digit', 
+                year: '2-digit' 
+            };
+            const timeStr = now.toLocaleTimeString('en-GB', options);
+            const dateStr = now.toLocaleDateString('en-GB', dateOptions);
+            document.getElementById('live-clock').innerText = `${timeStr} | ${dateStr}`;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
 
         window.toggleTheme = () => document.body.classList.toggle('light');
-
-        // --- STOCK REAL ---
-        onSnapshot(doc(db, "data", "stock"), (snap) => {
-            if(snap.exists()) {
-                currentStock = snap.data().cantidad;
-                document.getElementById('real-stock').innerText = currentStock;
-                
-                // Ajuste dinámico de mainQty si el stock baja repentinamente
-                if(mainQty > currentStock && currentStock > 0) mainQty = currentStock;
-                if(currentStock === 0) mainQty = 0;
-                
-                updateMainUI();
-                renderCart(); // Re-renderizar bolsa por si el stock cambió
-            }
-        });
 
         // --- MANEJO DE CANTIDAD EN TIENDA ---
         window.changeMainQty = (val) => {
             const next = mainQty + val;
-            if(next >= 1 && next <= currentStock) {
+            if(next >= 1) { // Sin límite de stock para libertad del usuario
                 mainQty = next;
                 updateMainUI();
             }
@@ -161,37 +148,23 @@
             document.getElementById('total-val').innerText = `$${(mainQty * UNIT_PRICE).toFixed(2)}`;
         }
 
-        // --- CARRITO ---
+        // --- CARRITO (SUMA CORRECTA) ---
         window.openCart = () => document.getElementById('cart-panel').classList.remove('translate-x-full');
         window.closeCart = () => document.getElementById('cart-panel').classList.add('translate-x-full');
 
         window.addToCart = () => {
-            if (currentStock <= 0) {
-                alert("Sin stock disponible.");
-                return;
-            }
-
-            // CORRECCIÓN: Ahora sumamos la nueva cantidad a la existente en lugar de sobrescribirla
-            const intentQty = cartQty + mainQty;
-
-            if (intentQty <= currentStock) {
-                cartQty = intentQty;
-                renderCart();
-                openCart();
-                mainQty = 1; // Resetear selector principal
-                updateMainUI();
-            } else {
-                alert(`Solo quedan ${currentStock} unidades. Ya tienes ${cartQty} en tu bolsa.`);
-            }
+            cartQty += mainQty; // ARREGLADO: Se suma a lo existente
+            renderCart();
+            openCart();
+            mainQty = 1; 
+            updateMainUI();
         }
 
         window.changeCartQty = (val) => {
             const next = cartQty + val;
-            if(next >= 0 && next <= currentStock) {
+            if(next >= 0) {
                 cartQty = next;
                 renderCart();
-            } else if (next > currentStock) {
-                alert("Stock máximo alcanzado.");
             }
         }
 
@@ -206,9 +179,6 @@
                 return;
             }
 
-            // Asegurar que cartQty no supere el stock si este cambió externamente
-            if (cartQty > currentStock) cartQty = currentStock;
-
             document.getElementById('btn-confirm').disabled = false;
             container.innerHTML = `
                 <div class="glass p-6 rounded-[35px] space-y-6">
@@ -220,7 +190,7 @@
                         </div>
                     </div>
                     <div class="flex justify-between items-center bg-white/5 p-4 rounded-2xl">
-                        <p class="text-[10px] font-bold uppercase opacity-50 tracking-widest">Ajustar</p>
+                        <p class="text-[10px] font-bold uppercase opacity-50 tracking-widest">Cantidad</p>
                         <div class="flex items-center gap-4">
                             <button onclick="changeCartQty(-1)" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 transition">-</button>
                             <span class="font-black text-xl">${cartQty}</span>
@@ -231,30 +201,30 @@
             `;
         }
 
-        // --- PEDIDO FINAL ---
+        // --- CONFIRMACIÓN FIREBASE ---
         window.confirmFirebaseOrder = async () => {
             if(cartQty === 0) return;
-            
             const btn = document.getElementById('btn-confirm');
             btn.disabled = true;
-            btn.innerText = "Procesando...";
-            
+            btn.innerText = "PROCESANDO...";
+
             try {
                 const stockRef = doc(db, "data", "stock");
                 const snap = await getDoc(stockRef);
-                const realCurrentStock = snap.data().cantidad;
+                const stockDB = snap.data().cantidad;
 
-                if (cartQty > realCurrentStock) {
-                    alert("El stock cambió. Ajustando tu bolsa...");
-                    location.reload();
+                if (cartQty > stockDB) {
+                    alert(`Lo sentimos, solo nos quedan ${stockDB} unidades.`);
+                    cartQty = stockDB;
+                    renderCart();
                     return;
                 }
 
-                await updateDoc(stockRef, { cantidad: realCurrentStock - cartQty });
+                await updateDoc(stockRef, { cantidad: stockDB - cartQty });
                 await setDoc(doc(db, "pedidos", "NEXO-" + Date.now()), {
                     cantidad: cartQty,
                     total: cartQty * UNIT_PRICE,
-                    fecha: new Date().toLocaleString(),
+                    fecha: new Date().toLocaleString('es-MX', { timeZone: 'America/Mexico_City' }),
                     estado: "Nuevo"
                 });
 
@@ -263,8 +233,7 @@
                 renderCart();
                 closeCart();
             } catch (e) {
-                console.error(e);
-                alert("Error al procesar el pedido.");
+                alert("Error de conexión. Inténtalo de nuevo.");
             } finally {
                 btn.disabled = false;
                 btn.innerText = "Confirmar Pedido";
