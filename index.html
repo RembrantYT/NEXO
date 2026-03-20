@@ -19,18 +19,18 @@
 
         .glass { transition: all 0.5s ease; background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.1); }
         
-        /* Modo Oscuro (Por defecto) - Ahora más profundo */
+        /* Modo Oscuro (Por defecto) - Ajustado a más profundo pero vibrante */
         .nexo-gradient { 
-            background: linear-gradient(135deg, #050505 0%, #0b3c5d 50%, #020c12 100%); 
+            background: radial-gradient(circle at center, #0b3c5d 0%, #051926 70%, #000000 100%); 
             background-attachment: fixed;
         }
         
-        /* Modo Claro - Colores Originales Verde/Azul */
-        body.light-mode { background: #f0f4f8; color: #0b3c5d; }
+        /* Modo Claro - Colores Oficiales Verde/Azul */
+        body.light-mode { background: #ffffff; color: #0b3c5d; }
         body.light-mode .nexo-gradient { 
             background: linear-gradient(135deg, #0b3c5d 0%, #1d70a2 50%, #7ed957 100%); 
         }
-        body.light-mode .glass { background: rgba(0, 0, 0, 0.05); border: 1px solid rgba(0,0,0,0.1); color: #0b3c5d; }
+        body.light-mode .glass { background: rgba(255, 255, 255, 0.7); border: 1px solid rgba(11, 60, 93, 0.1); color: #0b3c5d; }
         body.light-mode .text-white { color: #0b3c5d !important; }
 
         .text-gold {
@@ -239,6 +239,7 @@
             const btn = document.getElementById('theme-btn');
             body.classList.toggle('light-mode'); 
             
+            // Lógica de iconos: Sol en oscuro, Luna en claro
             if(body.classList.contains('light-mode')) {
                 btn.innerText = "🌙";
             } else {
