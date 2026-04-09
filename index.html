@@ -230,7 +230,14 @@
             <button class="w-full bg-black text-white py-5 rounded-2xl font-black uppercase">Pagar Ahora</button>
         </div>
     </div>
-
+<div id="profile-modal" class="fixed inset-0 z-[150] flex items-center justify-center bg-black/80 backdrop-blur-md hidden">
+    <div class="glass w-[90%] max-w-md p-8 rounded-[40px] border-[#7ed957]/30 text-center relative shadow-2xl">
+        <button onclick="closeProfile()" class="absolute top-6 right-6 text-2xl hover:text-[#7ed957] transition">✕</button>
+        <div id="profile-content">
+            <p class="text-xs animate-pulse">Iniciando escaneo biométrico...</p>
+        </div>
+    </div>
+</div>
     <script>
     let cart = []; let currentQty = 1; const UNIT_PRICE = 250;
 
