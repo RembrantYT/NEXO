@@ -232,8 +232,32 @@
     </div>
 
     <script>
-        let cart = []; let currentQty = 1; const UNIT_PRICE = 250;
-        function handleCredentialResponse(r) { alert("¡Bienvenido Ricardo! Sesión iniciada."); }
+    let cart = []; let currentQty = 1; const UNIT_PRICE = 250;
+
+    function handleCredentialResponse(response) {
+        // Decodifica la info real del usuario
+        const responsePayload = JSON.parse(atob(response.credential.split('.')[1]));
+        
+        // Saludo dinámico con el nombre de la cuenta
+        alert("¡Bienvenido " + responsePayload.name + "! Sesión iniciada correctamente.");
+
+        // Muestra la foto y nombre en el menú
+        const nav = document.querySelector('nav ul');
+        document.querySelector('.g_id_signin').style.display = 'none';
+        
+        const userProfileHTML = `
+            <li class="flex items-center gap-2 bg-white/10 p-1 pr-4 rounded-full border border-white/10">
+                <img src="${responsePayload.picture}" class="w-8 h-8 rounded-full border border-[#7ed957]">
+                <div class="flex flex-col">
+                    <span class="text-[10px] font-black leading-none">${responsePayload.given_name}</span>
+                    <span class="text-[8px] opacity-60">Conectado</span>
+                </div>
+                <button onclick="location.reload()" class="ml-2 text-[10px] hover:text-red-500">✕</button>
+            </li>
+        `;
+        nav.insertAdjacentHTML('beforeend', userProfileHTML);
+    }
+    // ... el resto de tus funciones (toggleTheme, etc.) siguen aquí abajo
         
         function toggleTheme() { 
             const body = document.body;
