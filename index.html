@@ -242,58 +242,76 @@
     let cart = []; 
     let currentQty = 1; 
     const UNIT_PRICE = 250;
-    let userLoggedData = null; // Variable para guardar los datos del usuario
+    let userLoggedData = null; 
 
     // --- 1. LOGIN Y PERFIL SEGURO ---
     function handleCredentialResponse(response) {
-        // Decodifica la info real del usuario
         const responsePayload = JSON.parse(atob(response.credential.split('.')[1]));
         userLoggedData = responsePayload; 
         
         const nav = document.querySelector('nav ul');
         document.querySelector('.g_id_signin').style.display = 'none';
         
-        // Creamos la burbuja de perfil con "cursor-pointer" y "onclick" para abrir el modal
         const userProfileHTML = `
             <li class="flex items-center gap-2 bg-white/10 p-1 pr-4 rounded-full border border-white/10 cursor-pointer hover:bg-white/20 transition" onclick="openSecureProfile()">
                 <img src="${responsePayload.picture}" class="w-8 h-8 rounded-full border border-[#7ed957]">
                 <div class="flex flex-col">
                     <span class="text-[10px] font-black leading-none">${responsePayload.given_name}</span>
-                    <span class="text-[8px] opacity-60">Seguridad Activa</span>
+                    <span class="text-[8px] opacity-60 uppercase">Perfil Nexo</span>
                 </div>
             </li>
         `;
         nav.insertAdjacentHTML('beforeend', userProfileHTML);
-        alert("¡Bienvenido " + responsePayload.name + "! Toca tu foto para ver tu panel.");
+        alert("¡Bienvenido " + responsePayload.name + "! Configura tu dirección en tu perfil.");
     }
 
-    // Función para abrir y llenar el modal de perfil
     async function openSecureProfile() {
         document.getElementById('profile-modal').classList.remove('hidden');
         const content = document.getElementById('profile-content');
         
-        // Efecto de carga
-        content.innerHTML = `<p class="text-xs animate-pulse text-[#7ed957] font-black uppercase">Escaneando Identidad...</p>`;
+        // Cargar datos guardados en la compu del usuario
+        const savedDir = localStorage.getItem('nexo_dir') || '';
+        const savedTel = localStorage.getItem('nexo_tel') || '';
+
+        content.innerHTML = `<p class="text-xs animate-pulse text-[#7ed957] font-black uppercase tracking-tighter">Accediendo a Nexo ID...</p>`;
 
         setTimeout(() => {
             content.innerHTML = `
-                <img src="${userLoggedData.picture}" class="w-20 h-20 rounded-full border-4 border-[#7ed957] mx-auto mb-4">
-                <h3 class="text-xl font-black italic mb-1 uppercase text-white">${userLoggedData.name}</h3>
-                <p class="text-[#7ed957] font-bold text-[10px] mb-6 uppercase tracking-widest">${userLoggedData.email}</p>
-                <div class="text-left space-y-3 bg-white/5 p-5 rounded-3xl border border-white/10 text-white">
-                    <div class="flex justify-between text-[9px] font-bold"><span class="opacity-50">ESTADO:</span> <span class="text-[#7ed957]">AUTENTICADO</span></div>
-                    <div class="flex justify-between text-[9px] font-bold"><span class="opacity-50">SESIÓN:</span> <span>ACTIVA</span></div>
+                <img src="${userLoggedData.picture}" class="w-16 h-16 rounded-full border-2 border-[#7ed957] mx-auto mb-2 shadow-lg">
+                <h3 class="text-lg font-black text-white uppercase italic">${userLoggedData.given_name}</h3>
+                
+                <div class="text-left mt-4 space-y-3 bg-white/5 p-4 rounded-3xl border border-white/10">
+                    <div>
+                        <label class="text-[8px] font-black text-[#7ed957] uppercase">Dirección (Solo Teziutlán)</label>
+                        <input type="text" id="user-dir" value="${savedDir}" placeholder="Ej. Col. Centro, Calle Real #10" 
+                            class="w-full bg-black/20 border border-white/10 rounded-xl p-2 text-[11px] text-white outline-none focus:border-[#7ed957]">
+                    </div>
+                    <div>
+                        <label class="text-[8px] font-black text-[#7ed957] uppercase">WhatsApp de contacto</label>
+                        <input type="tel" id="user-tel" value="${savedTel}" placeholder="231 123 4567" 
+                            class="w-full bg-black/20 border border-white/10 rounded-xl p-2 text-[11px] text-white outline-none focus:border-[#7ed957]">
+                    </div>
+                    <button onclick="saveDeliveryData()" class="w-full bg-[#7ed957] text-black font-black text-[9px] py-2 rounded-lg uppercase shadow-md active:scale-95 transition">
+                        Guardar datos de logística
+                    </button>
                 </div>
-                <button onclick="location.reload()" class="mt-6 text-[10px] font-black text-red-500 hover:scale-110 transition uppercase">Cerrar Sesión</button>
+                <button onclick="location.reload()" class="mt-4 text-[9px] font-bold text-red-500 uppercase hover:underline">Cerrar Sesión</button>
             `;
-        }, 1000);
+        }, 800);
     }
 
-    function closeProfile() {
-        document.getElementById('profile-modal').classList.add('hidden');
+    function saveDeliveryData() {
+        const dir = document.getElementById('user-dir').value;
+        const tel = document.getElementById('user-tel').value;
+        if(!dir || !tel) return alert("Llena tus datos para los envíos.");
+        localStorage.setItem('nexo_dir', dir);
+        localStorage.setItem('nexo_tel', tel);
+        alert("¡Datos guardados! Ya puedes ordenar.");
     }
 
-    // --- 2. FUNCIONES DE TIENDA ---
+    function closeProfile() { document.getElementById('profile-modal').classList.add('hidden'); }
+
+    // --- 2. TIENDA Y WHATSAPP ---
     function updateQty(val) { 
         currentQty = Math.max(1, currentQty + val); 
         document.getElementById('prod-qty').innerText = currentQty; 
@@ -313,51 +331,53 @@
         let total = 0; let count = 0;
         list.innerHTML = cart.map((item, idx) => {
             total += item.price * item.qty; count += item.qty;
-            return `<div class="bg-gray-100 p-4 rounded-2xl flex justify-between items-center text-black shadow-sm">
-                        <div>
+            return `<div class="bg-gray-100 p-3 rounded-2xl flex justify-between items-center text-black mb-2">
+                        <div class="leading-tight">
                             <p class="font-black text-[10px] uppercase">${item.name} x${item.qty}</p>
-                            <p class="font-bold text-sm">$${item.price * item.qty}</p>
+                            <p class="font-bold text-xs">$${item.price * item.qty}</p>
                         </div>
-                        <button onclick="cart.splice(${idx},1);updateCartUI();" class="text-red-500 font-black px-2 hover:scale-125 transition">✕</button>
+                        <button onclick="cart.splice(${idx},1);updateCartUI();" class="text-red-500 font-black">✕</button>
                     </div>`;
         }).join('');
         document.getElementById('cart-total').innerText = `$${total.toFixed(2)}`;
         document.getElementById('cart-count').innerText = count;
     }
 
-    // --- 3. INTERFAZ Y RELOJ ---
-    function toggleTheme() { 
-        document.body.classList.toggle('light-mode'); 
-        document.getElementById('theme-btn').innerText = document.body.classList.contains('light-mode') ? "🌙" : "☀️";
+    function finalizePurchase() {
+        const dir = localStorage.getItem('nexo_dir');
+        const tel = localStorage.getItem('nexo_tel');
+        if(!userLoggedData) return alert("Inicia sesión primero.");
+        if(!dir || !tel) {
+            alert("Faltan tus datos de envío.");
+            openSecureProfile();
+            return;
+        }
+
+        let pedido = cart.map(i => `${i.name} (x${i.qty})`).join(', ');
+        const miWhatsApp = "522311234567"; // CAMBIA ESTO POR TU NÚMERO
+        
+        const msg = `¡Hola NEXO! Nuevo pedido de: ${userLoggedData.name}%0APedido: ${pedido}%0ADirección: ${dir}%0ATeléfono: ${tel}%0A(Región Teziutlán)`;
+        window.open(`https://wa.me/${miWhatsApp}?text=${msg}`, '_blank');
     }
 
+    // --- 3. RELOJ Y IA ---
     function updateWidget() {
         const now = new Date();
         document.getElementById('live-clock').innerText = now.toLocaleTimeString('es-MX', {hour12:false});
         document.getElementById('live-date').innerText = now.toLocaleDateString('es-MX', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
     }
-    setInterval(updateWidget, 1000); 
-    updateWidget();
+    setInterval(updateWidget, 1000); updateWidget();
 
-    // --- 4. CHAT IA ---
     function toggleAIChat() { document.getElementById('ai-chat').classList.toggle('scale-0'); }
-
     function sendAIMessage() {
-        const input = document.getElementById('ai-input'); 
-        const content = document.getElementById('chat-content');
+        const input = document.getElementById('ai-input'); const content = document.getElementById('chat-content');
         if(!input.value.trim()) return;
-        
-        content.innerHTML += `<div class="bg-[#7ed957] text-black p-3 rounded-2xl ml-8 font-bold text-right shadow-md">${input.value}</div>`;
-        const m = input.value.toLowerCase();
-        input.value = "";
-        
+        content.innerHTML += `<div class="bg-[#7ed957] text-black p-3 rounded-2xl ml-8 font-bold text-right text-xs mb-2">${input.value}</div>`;
+        const m = input.value.toLowerCase(); input.value = "";
         setTimeout(() => {
-            let r = "Soy la IA de NEXO. ¿Preguntas sobre precios o quién nos creó?";
-            if(m.includes("hola")) r = "¡Hola! Bienvenido al soporte de NEXO.";
+            let r = "NEXO está para servirte. ¿Dudas sobre el envío?";
             if(m.includes("precio")) r = "El Dispositivo NEXO cuesta $250 MXN.";
-            if(m.includes("creador") || m.includes("creo")) r = "NEXO fue creado por Ricardo Peralta con el apoyo de la Técnica Lucero.";
-            
-            content.innerHTML += `<div class="bg-white/10 p-3 rounded-2xl mr-8 italic border border-white/5 text-white shadow-inner">🤖 ${r}</div>`;
+            content.innerHTML += `<div class="bg-white/10 p-3 rounded-2xl mr-8 italic border border-white/5 text-white text-xs mb-2">🤖 ${r}</div>`;
             content.scrollTop = content.scrollHeight;
         }, 600);
     }
