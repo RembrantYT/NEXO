@@ -21,7 +21,6 @@
             overflow-x: hidden;
         }
 
-        /* Estilos de Modo Claro */
         body.light-mode {
             --bg-gradient: linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 100%);
             background: #ffffff !important;
@@ -53,17 +52,9 @@
             font-weight: 800;
         }
 
-        .text-lucero-gradient {
-            background: linear-gradient(to right, #ff0000, #888888);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-weight: 800;
-        }
-
         .product-card:hover { transform: translateY(-10px); }
         #cart-sidebar, #ai-chat { transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         
-        /* Animación para la IA */
         @keyframes slideIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
@@ -123,12 +114,12 @@
             </div>
             <div id="chat-content" class="flex-1 overflow-y-auto p-4 space-y-4 text-[11px]">
                 <div class="bg-white/10 p-3 rounded-2xl rounded-tl-none border border-white/5 chat-msg">
-                    ¡Hola! Soy **NEXO IA**. Estoy aquí para ayudarte con tus compras o dudas. ¿En qué puedo servirte hoy?
+                    ¡Hola! Soy **NEXO IA**. Estoy aquí para acompañarte y resolver tus dudas sobre nuestra tecnología de calma. ¿En qué puedo ayudarte?
                 </div>
             </div>
             <form onsubmit="event.preventDefault(); sendAIMessage();" class="p-3 bg-black/40 flex gap-2">
-                <input id="ai-input" type="text" placeholder="Escribe una pregunta sobre NEXO..." class="flex-1 bg-white/5 border border-white/10 p-3 rounded-xl outline-none text-[10px] text-white focus:border-[#7ed957] transition">
-                <button type="submit" class="bg-[#7ed957] text-black font-black text-[10px] px-4 rounded-xl shadow-lg">ENVIAR</button>
+                <input id="ai-input" type="text" placeholder="Escribe tu mensaje..." class="flex-1 bg-white/5 border border-white/10 p-3 rounded-xl outline-none text-[10px] text-white focus:border-[#7ed957]">
+                <button type="submit" class="bg-[#7ed957] text-black font-black text-[10px] px-4 rounded-xl">ENVIAR</button>
             </form>
         </div>
     </div>
@@ -139,7 +130,18 @@
         <a href="#catalogo" class="bg-[#7ed957] text-black text-xl font-black px-12 py-5 rounded-full shadow-2xl hover:scale-110 transition">ORDENAR AHORA</a>
     </section>
 
-    <section id="catalogo" class="py-24 px-8 bg-white/5 backdrop-blur-sm scroll-mt">
+    <section id="mision" class="py-24 px-8 max-w-7xl mx-auto grid md:grid-cols-2 gap-12">
+        <div class="glass p-10 rounded-[40px] border-[#7ed957]/20">
+            <h2 class="text-4xl font-black text-[#7ed957] mb-6 italic uppercase">Misión</h2>
+            <p class="text-lg font-light leading-relaxed">Nuestra misión es proporcionar herramientas tecnológicas accesibles y elegantes que ayuden a las personas a gestionar el estrés diario, promoviendo la salud mental a través de la innovación desde Teziutlán.</p>
+        </div>
+        <div class="glass p-10 rounded-[40px] border-white/10">
+            <h2 class="text-4xl font-black text-white mb-6 italic uppercase">Visión</h2>
+            <p class="text-lg font-light leading-relaxed">Convertirnos en el referente líder de bienestar tecnológico en la región, creando un ecosistema de productos que reconecten a los usuarios con su paz interior de manera inmediata.</p>
+        </div>
+    </section>
+
+    <section id="catalogo" class="py-24 px-8 bg-white/5 backdrop-blur-sm">
         <div class="max-w-7xl mx-auto text-center">
             <h2 class="text-5xl font-black mb-16 italic uppercase tracking-tighter">Catálogo</h2>
             <div class="glass p-8 rounded-[40px] flex flex-col md:flex-row gap-12 items-center product-card">
@@ -151,9 +153,9 @@
                     <div class="flex items-center gap-6">
                         <span class="text-4xl font-black text-gold">$<span id="display-price">250</span>.00</span>
                         <div class="flex items-center bg-black/40 rounded-2xl p-2 border border-white/10">
-                            <button onclick="updateQty(-1)" class="w-10 h-10 font-black hover:text-[#7ed957] transition text-xl">-</button>
-                            <span id="prod-qty" class="w-12 text-center font-black text-xl">1</span>
-                            <button onclick="updateQty(1)" class="w-10 h-10 font-black hover:text-[#7ed957] transition text-xl">+</button>
+                            <button onclick="updateQty(-1)" class="w-10 h-10 font-black hover:text-[#7ed957] transition">-</button>
+                            <span id="prod-qty" class="w-12 text-center font-black">1</span>
+                            <button onclick="updateQty(1)" class="w-10 h-10 font-black hover:text-[#7ed957] transition">+</button>
                         </div>
                     </div>
                     <button onclick="addToCart('Dispositivo NEXO', 250)" class="w-full md:w-auto bg-[#7ed957] text-black font-black px-12 py-5 rounded-2xl hover:bg-white transition shadow-xl uppercase tracking-widest">AGREGAR AL CARRITO</button>
@@ -162,19 +164,23 @@
         </div>
     </section>
 
+    <section class="py-20 px-8 text-center max-w-4xl mx-auto">
+        <h2 class="text-2xl font-black mb-8 italic text-[#7ed957] uppercase tracking-widest">Agradecimientos Especiales</h2>
+        <p class="opacity-70 font-light italic">Agradecemos profundamente a todas las personas que han creído en este proyecto joven. A nuestras familias, amigos y a la comunidad de Teziutlán por permitirnos llevar NEXO a cada rincón.</p>
+    </section>
+
     <div id="cart-sidebar" class="fixed top-0 right-0 h-full w-full md:w-[420px] bg-[#051926] text-white z-[100] transform translate-x-full shadow-2xl flex flex-col border-l border-white/10">
         <div class="p-8 border-b border-white/10 flex justify-between items-center bg-black/20">
             <h2 class="text-2xl font-black italic uppercase tracking-tighter text-[#7ed957]">Tu Bolsa NEXO</h2>
             <button onclick="toggleCart()" class="text-2xl font-black hover:rotate-90 transition">✕</button>
         </div>
-        <div id="cart-items" class="flex-1 overflow-y-auto p-8 space-y-4">
-            </div>
+        <div id="cart-items" class="flex-1 overflow-y-auto p-8 space-y-4"></div>
         <div class="p-8 border-t border-white/10 bg-black/20">
             <div class="flex justify-between text-2xl font-black mb-6 uppercase italic">
                 <span>Total</span>
                 <span id="cart-total" class="text-[#7ed957]">$0.00</span>
             </div>
-            <button onclick="finalizePurchase()" class="w-full bg-[#7ed957] text-black py-5 rounded-2xl font-black uppercase hover:bg-white transition shadow-[0_0_20px_rgba(126,217,87,0.3)]">Finalizar Pedido vía WhatsApp</button>
+            <button onclick="finalizePurchase()" class="w-full bg-[#7ed957] text-black py-5 rounded-2xl font-black uppercase hover:bg-white transition">Finalizar Pedido vía WhatsApp</button>
         </div>
     </div>
 
@@ -192,14 +198,12 @@
         let isDark = true;
         let userLoggedData = null;
 
-        // --- MODO OSCURO/CLARO (Corregido) ---
         function toggleTheme() {
             isDark = !isDark;
             document.body.classList.toggle('light-mode');
             document.getElementById('theme-btn').innerText = isDark ? '🌙' : '☀️';
         }
 
-        // --- RELOJ Y CLIMA (Teziutlán) ---
         function updateWidget() {
             const now = new Date();
             document.getElementById('live-clock').innerText = now.toLocaleTimeString('es-MX', {hour12:false});
@@ -209,7 +213,6 @@
         setInterval(updateWidget, 1000);
         updateWidget();
 
-        // --- TIENDA Y CARRITO ---
         function updateQty(val) {
             currentQty = Math.max(1, currentQty + val);
             document.getElementById('prod-qty').innerText = currentQty;
@@ -222,11 +225,8 @@
 
         function addToCart(name, price) {
             const existing = cart.find(i => i.name === name);
-            if(existing) {
-                existing.qty += currentQty;
-            } else {
-                cart.push({name, price, qty: currentQty});
-            }
+            if(existing) { existing.qty += currentQty; } 
+            else { cart.push({name, price, qty: currentQty}); }
             currentQty = 1;
             document.getElementById('prod-qty').innerText = 1;
             document.getElementById('display-price').innerText = UNIT_PRICE;
@@ -234,38 +234,22 @@
             if(document.getElementById('cart-sidebar').classList.contains('translate-x-full')) toggleCart();
         }
 
-        function updateCartQty(idx, delta) {
-            if(cart[idx].qty + delta > 0) {
-                cart[idx].qty += delta;
-                updateCartUI();
-            } else {
-                cart.splice(idx, 1);
-                updateCartUI();
-            }
-        }
-
         function updateCartUI() {
             const list = document.getElementById('cart-items');
             let total = 0; let count = 0;
-            
             if(cart.length === 0) {
-                list.innerHTML = `<div class="text-center opacity-40 mt-10 uppercase font-black tracking-widest italic">Tu bolsa está vacía</div>`;
+                list.innerHTML = `<div class="text-center opacity-40 mt-10 uppercase font-black italic">Tu bolsa está vacía</div>`;
             } else {
                 list.innerHTML = cart.map((item, idx) => {
                     total += item.price * item.qty;
                     count += item.qty;
                     return `
-                    <div class="glass p-5 rounded-[25px] flex justify-between items-center border-white/10 chat-msg">
-                        <div class="flex-1">
-                            <p class="font-black text-[10px] uppercase text-[#7ed957] mb-1">Dispositivo</p>
-                            <p class="font-black text-sm uppercase italic leading-none">${item.name}</p>
-                            <p class="text-xs font-bold mt-2">$${item.price * item.qty}.00</p>
+                    <div class="glass p-5 rounded-[25px] flex justify-between items-center border-white/10 mb-2">
+                        <div>
+                            <p class="font-black text-sm uppercase italic">${item.name}</p>
+                            <p class="text-xs font-bold">$${item.price * item.qty}.00</p>
                         </div>
-                        <div class="flex flex-col items-center gap-2 bg-black/30 p-2 rounded-xl border border-white/5">
-                            <button onclick="updateCartQty(${idx}, 1)" class="text-[#7ed957] font-black">+</button>
-                            <span class="text-xs font-black">${item.qty}</span>
-                            <button onclick="updateCartQty(${idx}, -1)" class="text-white opacity-50 font-black">-</button>
-                        </div>
+                        <div class="text-xs font-black text-[#7ed957]">x${item.qty}</div>
                     </div>`;
                 }).join('');
             }
@@ -273,10 +257,7 @@
             document.getElementById('cart-count').innerText = count;
         }
 
-        // --- NEXO IA: PERSONALIDAD Y DEFENSA ---
-        function toggleAIChat() { 
-            document.getElementById('ai-chat').classList.toggle('scale-0'); 
-        }
+        function toggleAIChat() { document.getElementById('ai-chat').classList.toggle('scale-0'); }
 
         function sendAIMessage() {
             const input = document.getElementById('ai-input');
@@ -284,97 +265,70 @@
             const text = input.value.trim();
             if(!text) return;
 
-            // Mostrar mensaje usuario
             content.innerHTML += `<div class="bg-[#7ed957] text-black p-3 rounded-2xl ml-8 font-bold text-right text-xs chat-msg mb-2">${text}</div>`;
             input.value = "";
-            content.scrollTop = content.scrollHeight;
-
-            // Procesar respuesta
+            
             setTimeout(() => {
                 const lowText = text.toLowerCase();
-                const groserias = ["pendejo", "idiota", "puta", "mierda", "estupida", "perra", "mamada", "chinga", "verga"];
+                const groserias = ["pendejo", "idiota", "puta", "mierda", "estupida", "perra", "mamada", "chinga", "verga", "albur"];
                 let r = "";
 
                 if(groserias.some(word => lowText.includes(word))) {
-                    r = "Como NEXO IA, mantengo la educación ante todo. Si tienes una duda sobre el producto, estoy para ayudarte, pero no acepto insultos.";
-                } else if(lowText.includes("precio") || lowText.includes("cuánto cuesta")) {
-                    r = "El Dispositivo NEXO tiene un costo de $250.00 MXN en su versión básica. ¡Es una gran inversión para tu calma!";
-                } else if(lowText.includes("teziutlan") || lowText.includes("donde")) {
-                    r = "¡Estamos en Teziutlán, Puebla! El envío local es súper rápido para que tu paz no tenga que esperar.";
+                    r = "Como NEXO IA, valoro el respeto tanto como tu calma. Por favor, mantengamos un lenguaje educado.";
+                } else if(lowText.includes("hola") || lowText.includes("que tal")) {
+                    r = "¡Hola! Qué gusto saludarte. Soy el asistente de NEXO. ¿Buscas mejorar tu bienestar hoy?";
                 } else {
-                    r = "¡Interesante! Recuerda que NEXO no es solo un producto, es un proyecto joven nacido en Teziutlán para mejorar el bienestar mental. ¿Quieres saber cómo comprar?";
+                    r = "NEXO está diseñado para brindarte calma en Teziutlán y más allá. ¿Te gustaría saber cómo adquirir tu dispositivo?";
                 }
-
                 content.innerHTML += `<div class="bg-white/10 p-3 rounded-2xl mr-8 border border-white/5 text-white text-xs chat-msg italic">🤖 <b>NEXO IA:</b> ${r}</div>`;
                 content.scrollTop = content.scrollHeight;
             }, 800);
         }
 
-        // --- LOGIN Y PERFIL ---
         function handleCredentialResponse(response) {
             const payload = JSON.parse(atob(response.credential.split('.')[1]));
             userLoggedData = payload;
             document.querySelector('.g_id_signin').style.display = 'none';
-            alert(`¡Hola ${payload.given_name}! Perfil NEXO sincronizado.`);
             openSecureProfile();
         }
 
         function openSecureProfile() {
-            if(!userLoggedData) return alert("Por favor, inicia sesión con Google.");
             const modal = document.getElementById('profile-modal');
             const content = document.getElementById('profile-content');
             modal.classList.remove('hidden');
-            
             const savedDir = localStorage.getItem('nexo_dir') || '';
             const savedTel = localStorage.getItem('nexo_tel') || '';
 
             content.innerHTML = `
-                <img src="${userLoggedData.picture}" class="w-24 h-24 rounded-full border-4 border-[#7ed957] mx-auto mb-4 shadow-[0_0_30px_rgba(126,217,87,0.4)]">
-                <h3 class="text-3xl font-black italic uppercase tracking-tighter text-white">${userLoggedData.name}</h3>
-                <p class="text-[10px] text-[#7ed957] font-black uppercase tracking-widest mb-6">Usuario Verificado NEXO</p>
-                
-                <div class="space-y-4 text-left">
-                    <div class="bg-white/5 p-4 rounded-3xl border border-white/10">
-                        <label class="text-[9px] font-black text-[#7ed957] uppercase block mb-1">Dirección en Teziutlán</label>
-                        <input type="text" id="u-dir" value="${savedDir}" placeholder="Calle, Barrio o Colonia" class="w-full bg-black/40 border border-white/10 p-3 rounded-xl text-xs text-white outline-none focus:border-[#7ed957]">
-                    </div>
-                    <div class="bg-white/5 p-4 rounded-3xl border border-white/10">
-                        <label class="text-[9px] font-black text-[#7ed957] uppercase block mb-1">WhatsApp de contacto</label>
-                        <input type="tel" id="u-tel" value="${savedTel}" placeholder="231 123 4567" class="w-full bg-black/40 border border-white/10 p-3 rounded-xl text-xs text-white outline-none focus:border-[#7ed957]">
-                    </div>
+                <img src="${userLoggedData.picture}" class="w-24 h-24 rounded-full border-4 border-[#7ed957] mx-auto mb-4">
+                <h3 class="text-2xl font-black italic uppercase text-white">${userLoggedData.name}</h3>
+                <div class="space-y-4 text-left mt-6">
+                    <input type="text" id="u-dir" value="${savedDir}" placeholder="Tu dirección" class="w-full bg-black/40 border border-white/10 p-3 rounded-xl text-xs text-white outline-none">
+                    <input type="tel" id="u-tel" value="${savedTel}" placeholder="Tu WhatsApp" class="w-full bg-black/40 border border-white/10 p-3 rounded-xl text-xs text-white outline-none">
                 </div>
-                
-                <button onclick="saveProfile()" class="w-full bg-[#7ed957] text-black font-black py-4 rounded-2xl mt-6 uppercase text-sm shadow-xl active:scale-95 transition">Actualizar Mis Datos</button>
-                <button onclick="location.reload()" class="mt-4 text-[10px] font-bold text-red-500 uppercase hover:underline">Cerrar Sesión</button>
+                <button onclick="saveProfile()" class="w-full bg-[#7ed957] text-black font-black py-4 rounded-2xl mt-6 uppercase text-sm">Guardar Datos</button>
             `;
         }
 
         function saveProfile() {
-            const dir = document.getElementById('u-dir').value;
-            const tel = document.getElementById('u-tel').value;
-            if(!dir || !tel) return alert("Para que NEXO llegue a tu puerta, completa los datos.");
-            localStorage.setItem('nexo_dir', dir);
-            localStorage.setItem('nexo_tel', tel);
-            alert("¡Datos de logística guardados!");
+            localStorage.setItem('nexo_dir', document.getElementById('u-dir').value);
+            localStorage.setItem('nexo_tel', document.getElementById('u-tel').value);
+            alert("¡Datos guardados!");
             closeProfile();
         }
 
         function closeProfile() { document.getElementById('profile-modal').classList.add('hidden'); }
 
         function finalizePurchase() {
-            if(!userLoggedData) return alert("Para comprar, primero identifícate en NEXO.");
+            if(!userLoggedData) return alert("Por favor inicia sesión con Google.");
             const dir = localStorage.getItem('nexo_dir');
             const tel = localStorage.getItem('nexo_tel');
-            if(!dir || !tel) {
-                alert("Necesitamos tu dirección en Teziutlán.");
-                openSecureProfile();
-                return;
-            }
-            if(cart.length === 0) return alert("Tu bolsa está vacía.");
+            if(!dir || !tel) return openSecureProfile();
+            if(cart.length === 0) return alert("Bolsa vacía.");
 
             let items = cart.map(i => `*${i.name}* (x${i.qty})`).join('%0A');
-            const waNum = "522311234567"; // TU NÚMERO
-            const msg = `¡Hola NEXO!%0A%0AHe realizado un pedido desde la web.%0A%0A*Cliente:* ${userLoggedData.name}%0A*Pedido:*%0A${items}%0A%0A*Dirección:* ${dir}%0A*Tel:* ${tel}%0A%0A_Región: Teziutlán, Puebla_`;
+            const waNum = "522311511435"; // NÚMERO ACTUALIZADO DE NEXO
+            const msg = `¡Hola NEXO!%0A%0AHe realizado un pedido.%0A%0A*Cliente:* ${userLoggedData.name}%0A*Pedido:*%0A${items}%0A%0A*Dirección:* ${dir}%0A*Tel:* ${tel}%0A%0A_Región: Teziutlán_`;
             window.open(`https://wa.me/${waNum}?text=${msg}`, '_blank');
         }
     </script>
